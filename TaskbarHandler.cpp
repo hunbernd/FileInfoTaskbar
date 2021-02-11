@@ -87,6 +87,7 @@ void TaskbarHandler::tick()
 
 	int all = 0;
 	int completed = 0;
+	int downloading = 0;
 	uint64_t allbytes = 0;
 	uint64_t completedbytes = 0;
 	for(auto hash : hashes){
@@ -95,8 +96,11 @@ void TaskbarHandler::tick()
 			all++;
 			allbytes += info.size;
 			completedbytes += info.avail;
-			if(info.downloadStatus==FT_STATE_COMPLETE){
+			std::cout << "error Downloading file " << info.fname << " " << info.downloadStatus << std::endl;
+			if(info.downloadStatus == FT_STATE_COMPLETE){
 				completed++;
+			} else if(info.downloadStatus == FT_STATE_DOWNLOADING){
+				downloading++;
 			}
 		}
 	}
@@ -109,7 +113,11 @@ void TaskbarHandler::tick()
 		setProgress(settings->allfinishedcolor, 100);
 	} else {
 		int percent = settings->bytes ? ((int)(completedbytes * 100 / allbytes)) : ((int)(completed * 100 / all));
-		setProgress(settings->activecolor, percent);
+		if(downloading > 0){
+			setProgress(settings->activecolor, percent);
+		} else { //Nothing is downloading, some files stuck
+			setProgress(settings->stuckcolor, percent);
+		}
 	}
 //	if(all == 0){
 //		progressbar->hide();
