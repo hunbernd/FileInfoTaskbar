@@ -43,51 +43,42 @@ void FileInfoTaskbarPlugin::getPluginVersion(int& major, int& minor, int &build,
 
 FileInfoTaskbarPlugin::FileInfoTaskbarPlugin()
 {
-	std::cout << "error FileStatusbarPlugin ctor" << std::endl;
 	mPlugInHandler = NULL;
 }
 
 void FileInfoTaskbarPlugin::setInterfaces(RsPlugInInterfaces &interfaces)
 {
-	std::cout << "error FileStatusbarPlugin setInterfaces" << std::endl;
 	mInterfaces = interfaces;
 }
 
 ConfigPage *FileInfoTaskbarPlugin::qt_config_page() const
 {
-	std::cout << "error FileStatusbarPlugin qt_config_page begin" << std::endl;
 	FileInfoTaskbarConfig *fstbc = new FileInfoTaskbarConfig();
 	stbh = new TaskbarHandler(fstbc);
 	stbh->start(mInterfaces.mFiles);
-	std::cout << "error FileStatusbarPlugin qt_config_page end" << std::endl;
 	return fstbc;
 }
 
 void FileInfoTaskbarPlugin::stop()
 {
-	std::cout << "error FileStatusbarPlugin stop begin" << std::endl;
 //	if(stbh) {
 //		stbh->stop();
 //		delete stbh;
 //		stbh = nullptr;
 //	}
-	std::cout << "error FileStatusbarPlugin stop end" << std::endl;
 }
 
 void FileInfoTaskbarPlugin::setPlugInHandler(RsPluginHandler *pgHandler)
 {
-	std::cout << "error FileStatusbarPlugin setPlugInHandler" << std::endl;
 	mPlugInHandler = pgHandler;
 }
 
 std::string FileInfoTaskbarPlugin::getShortPluginDescription() const
 {
-	std::cout << "error FileStatusbarPlugin getShortPluginDescription" << std::endl;
 	return QApplication::translate("FileInfoTaskbarPlugin", "Displays file download status on Windows taskbar.").toUtf8().constData();
 }
 
 std::string FileInfoTaskbarPlugin::getPluginName() const
 {
-	std::cout << "error FileStatusbarPlugin getPluginName" << std::endl;
 	return QApplication::translate("FileInfoTaskbarPlugin", "FileInfoTaskbar").toUtf8().constData();
 }
