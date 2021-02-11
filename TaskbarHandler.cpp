@@ -1,9 +1,10 @@
+#include "FileInfoTaskbarSettings.h"
 #include "TaskbarHandler.h"
 
 #include <QApplication>
 #include <QWidget>
 
-TaskbarHandler::TaskbarHandler(QWidget *parent) : QObject(parent)
+TaskbarHandler::TaskbarHandler(FileInfoTaskbarConfig *parent) : QObject(parent)
 {
 	std::cout << "error StatusbarHandler ctor begin" << std::endl;
 	configPage = parent;
@@ -55,11 +56,31 @@ bool TaskbarHandler::checkWindow()
 	return haswWindow;
 }
 
+void TaskbarHandler::setProgress(int color, int percent)
+{
+	if(color == TaskbarColors::None){
+		progressbar->hide();
+	} else {
+		if(color == TaskbarColors::Green){
+			progressbar->resume();
+		} else if(color == TaskbarColors::Yellow){
+			progressbar->pause();
+		} else if(color == TaskbarColors::Red){
+			progressbar->stop();
+		}
+		progressbar->setValue(percent);
+		progressbar->show();
+
+	}
+}
+
 void TaskbarHandler::tick()
 {
 	std::cout << "error StatusbarHandler tick begin" << std::endl;
 	if(!checkWindow()) return;
 	std::cout << "error StatusbarHandler tick 1" << std::endl;
+
+	FileInfoTaskbarSettings *settings = configPage->getSettings();
 
 	std::list<RsFileHash> hashes;
 	mFiles->FileDownloads(hashes);
@@ -83,17 +104,25 @@ void TaskbarHandler::tick()
 	std::cout << "error StatusbarHandler tick 2" << std::endl;
 
 	if(all == 0){
-		progressbar->hide();
-		std::cerr << "No downloads" << std::endl;
+		setProgress(TaskbarColors::None, 0);
+	} else if(all == completed) {
+		setProgress(settings->allfinishedcolor, 100);
 	} else {
-		progressbar->show();
-		//taskbar->setValue((int)((float)completed / (float)all * 100));
-		//progressbar->setValue(50);
-		//progressbar->setValue(completed * 100 / all);
-		progressbar->setValue((int)(completedbytes * 100 / allbytes));
-		progressbar->resume();
-		std::cerr << "Downloads completed: " << completedbytes << "/" << allbytes << std::endl;
+		int percent = settings->bytes ? ((int)(completedbytes * 100 / allbytes)) : ((int)(completed * 100 / all));
+		setProgress(settings->activecolor, percent);
 	}
+//	if(all == 0){
+//		progressbar->hide();
+//		std::cerr << "No downloads" << std::endl;
+//	} else {
+//		progressbar->show();
+//		//taskbar->setValue((int)((float)completed / (float)all * 100));
+//		//progressbar->setValue(50);
+//		//progressbar->setValue(completed * 100 / all);
+//		progressbar->setValue((int)(completedbytes * 100 / allbytes));
+//		progressbar->resume();
+//		std::cerr << "Downloads completed: " << completedbytes << "/" << allbytes << std::endl;
+//	}
 
 	std::cout << "error StatusbarHandler tick end" << std::endl;
 }

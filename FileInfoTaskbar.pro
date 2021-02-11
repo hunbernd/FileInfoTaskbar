@@ -33,17 +33,19 @@ target.files = lib/libfileinfotaskbar.so
 SOURCES =	\
     FileInfoTaskbarConfig.cpp \
     FileInfoTaskbarPlugin.cpp \
+    FileInfoTaskbarSettings.cpp \
     TaskbarHandler.cpp
 
 HEADERS =	\
     FileInfoTaskbarConfig.h \
     FileInfoTaskbarPlugin.h \
+    FileInfoTaskbarSettings.h \
     TaskbarHandler.h
 
 FORMS = \
     FileInfoTaskbarConfig.ui
 
-TARGET = FileStatusbar
+TARGET = FileInfoTaskbar
 
 RESOURCES =
 
